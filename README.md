@@ -182,12 +182,9 @@ Adverts model
 
 ### Trello/Kanban
 
-[Link to your trello board](https://trello.com/) 
-or picture of your physical board
+[Trello](https://trello.com/b/ZaPhxnPt/old-is-cool) 
 
 ### Git
-
-The url to your repository and to your deployed project
 
 [Client repository Link](https://github.com/tomytubert/old-is-cool-api)
 

@@ -1,4 +1,4 @@
-[
+module.exports = [
     {
       "logo": "https://www.car-logos.org/wp-content/uploads/2011/09/abarth1.png",
       "name": "Abarth"

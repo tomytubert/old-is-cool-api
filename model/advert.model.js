@@ -4,10 +4,10 @@ const AdvertSchema = new mongoose.Schema({
   typeOfCar: {
     type: String,
     required: true,
-    enum: ["coche", "furgoneta", "camion"],
+    enum: ["Coche", "Furgoneta", "Camion"],
   },
   image: {
-    type: String,
+    type: [String],
     required: true,
   },
   user: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -21,7 +21,14 @@ const AdvertSchema = new mongoose.Schema({
   },
   fuel: {
     type: String,
-    enum: ["gasolina", "diesel"],
+    enum: ["Gasolina", "Diesel"],
+  },
+  typeOfTransmision: {
+    type: String,
+    enum: ["Manual", "Automatico"],
+  },
+  km:{
+    type:Number,
   },
   model: {
     type: String,

@@ -15,12 +15,18 @@ exports.createAdvert = async (req, res) => {
       otherInformation,
       typeOfTransmision,
       km,
+      price,
+      address
     } = req.body;
     const isMissingCredentials =
       !typeOfCar || !image || !brand || !year || !model;
     if (isMissingCredentials) {
-      return res.status(400).json({ message: "missing data" });
+      return res.status(400).json({ message: req.body });
     }
+    const userSessionId = req.session.userId
+    console.log("reqCreateAdvert",req.session);
+    console.log("userSessionId",userSessionId);
+    
     const newAdvert = await Advert.create({
       typeOfCar,
       image,
@@ -33,8 +39,11 @@ exports.createAdvert = async (req, res) => {
       otherInformation,
       typeOfTransmision,
       km,
-      user: req.session.userId,
+      price,
+      address,
+      user:req.session.userId
     });
+    
     return res.status(200).json({ advert: newAdvert._id });
   } catch (e) {
     console.error(e);

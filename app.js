@@ -9,6 +9,7 @@ require("./config/session.config")(app);
 const authRoutes = require("./routes/auth.routes");
 const advertRoutes = require("./routes/advert.routes");
 const brandRoutes = require("./routes/brand.routes")
+
 app.use("/auth", authRoutes);
 app.use("/advert", advertRoutes);
 app.use("/brand", brandRoutes);

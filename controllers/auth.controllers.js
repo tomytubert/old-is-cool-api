@@ -67,6 +67,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "incorrect password format" });
     }
     req.session.userId = user._id;
+    console.log("reqLogin",req.session);
 
     return res.status(200).json({ user: user.email, id: user._id });
   } catch (e) {

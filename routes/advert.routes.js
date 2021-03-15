@@ -13,7 +13,7 @@ const {
 
 route
   .post("/upload",fileUploader.single("image"),uploadImage)
-  .post("/newAdvert", withAuth, createAdvert)
+  .post("/newAdvert", createAdvert)
   .get("/getAll", getAllAdverts)
   .get("/:advertId", getAdvert)
   .delete("/:advertId/delete", withAuth, deleteAdvert)

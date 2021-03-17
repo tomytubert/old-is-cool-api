@@ -8,12 +8,16 @@ const {
   getAdvert,
   deleteAdvert,
   updateAdvert,
-  uploadImage
+  uploadImage,
+  likedAdvert,
+  unLikedAdvert
 } = require("../controllers/advert.controllers");
 
 route
   .post("/upload",fileUploader.single("image"),uploadImage)
   .post("/newAdvert", createAdvert)
+  .post("/likedAdvert",likedAdvert)
+  .post("/unLikedAdvert",unLikedAdvert)
   .get("/getAll", getAllAdverts)
   .get("/:advertId", getAdvert)
   .delete("/:advertId/delete", withAuth, deleteAdvert)

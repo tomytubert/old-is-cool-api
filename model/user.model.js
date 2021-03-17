@@ -15,7 +15,13 @@ const UserSchema = new mongoose.Schema({
   },
   address: {
     type:String
-  }
+  },
+  name:{
+    type:String
+  },
+  likedAdverts:[{
+    type: mongoose.Schema.Types.ObjectId, ref:"Advert"
+  }]
 });
 
 module.exports = mongoose.model("User", UserSchema);

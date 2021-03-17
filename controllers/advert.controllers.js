@@ -1,4 +1,5 @@
 const Advert = require("../model/advert.model");
+const User = require("../model/user.model");
 const bcrypt = require("bcryptjs");
 
 exports.createAdvert = async (req, res) => {
@@ -24,8 +25,6 @@ exports.createAdvert = async (req, res) => {
       return res.status(400).json({ message: req.body });
     }
     const userSessionId = req.session.userId
-    console.log("reqCreateAdvert",req.session);
-    console.log("userSessionId",userSessionId);
     
     const newAdvert = await Advert.create({
       typeOfCar,
@@ -101,3 +100,28 @@ exports.updateAdvert = async (req, res) => {
     return res.status(400).json({ message: "wrong request" });
   }
 };
+
+exports.likedAdvert = async (req,res)=>{
+  try{
+    const { userId } = req.session;
+    const advertId = Object.keys(req.body)
+    const updateUserLikeAdvert = await User.findByIdAndUpdate( userId,
+      {$addToSet: {likedAdverts: advertId[0]}},
+      {new: true})
+    return res.status(200).json(updateUserLikeAdvert)
+  }catch(e){
+    return res.status(400).json({message:"wrong request"})
+  }
+}
+exports.unLikedAdvert = async (req,res)=>{
+  try{
+    const { userId } = req.session;
+    const advertId = Object.keys(req.body)
+    const updateUserLikeAdvert = await User.findByIdAndUpdate( userId,
+      {$pull: {likedAdverts: advertId[0]}},
+      {new: true})
+    return res.status(200).json(updateUserLikeAdvert)
+  }catch(e){
+    return res.status(400).json({message:"wrong request"})
+  }
+}

@@ -85,8 +85,8 @@ exports.logout = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   const { userId } = req.session;
-  const { email, _id } = await User.findOne(userId);
-  res.status(200).json({ id: _id, email });
+  const { email, _id, likedAdverts } = await User.findById(userId);
+  res.status(200).json({ id: _id, email, likedAdverts });
 };
 
 //----------------------------------------------------------------------------EDIT USER

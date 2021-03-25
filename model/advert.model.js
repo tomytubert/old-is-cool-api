@@ -49,7 +49,17 @@ const AdvertSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true
-  }
+  },
+  fromWhere:{
+    type: String,
+    enum: ["Europa", "Asia","America"],
+  },
+  soldOut:{
+    type:Boolean
+  },
+  contacts:[{
+    type: mongoose.Schema.Types.ObjectId, ref:"User"
+  }]
 },{timestamps: true});
 
 module.exports = mongoose.model("Advert", AdvertSchema);

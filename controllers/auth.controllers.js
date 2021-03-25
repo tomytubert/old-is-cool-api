@@ -1,4 +1,5 @@
 const User = require("../model/user.model");
+const Advert = require("../model/advert.model");
 const bcrypt = require("bcryptjs");
 const {
   hasCorrectPasswordFormat,
@@ -8,7 +9,8 @@ const {
 
 exports.signup = async (req, res) => {
   try {
-    const { password, email } = req.body;
+    const { password, email, type, img } = req.body;
+    console.log("req.body", type);
     const hasMissingCredentials = !password || !email;
     if (hasMissingCredentials) {
       return res.status(400).json({ message: "missing credentials" });
@@ -27,11 +29,18 @@ exports.signup = async (req, res) => {
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = await User.create({ email, hashedPassword });
+    const newUser = await User.create({
+      email,
+      hashedPassword,
+      type,
+      img,
+    });
 
     req.session.userId = newUser._id;
 
-    return res.status(200).json({ user: newUser.email, id: newUser._id });
+    return res
+      .status(200)
+      .json({ user: newUser.email, id: newUser._id, type: type });
   } catch (e) {
     if (isMongooseErrorValidation(e)) {
       return res.status(400).json({ message: "incorrect email format" });
@@ -67,7 +76,6 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "incorrect password format" });
     }
     req.session.userId = user._id;
-    console.log("reqLogin",req.session);
 
     return res.status(200).json({ user: user.email, id: user._id });
   } catch (e) {
@@ -84,9 +92,92 @@ exports.logout = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  const { userId } = req.session;
-  const { email, _id, likedAdverts } = await User.findById(userId);
-  res.status(200).json({ id: _id, email, likedAdverts });
+  try {
+    // const {userId} = req.params
+    const { userId } = req.session;
+    const {
+      email,
+      _id,
+      likedAdverts,
+      type,
+      img,
+      adverts,
+      name,
+      address,
+      sells
+    } = await User.findById(userId).populate({
+      path: "adverts",
+      populate:{
+        path:"contacts",
+        select:"email img"
+      }
+    })
+    res.status(200).json({ id: _id, email, likedAdverts, type, img, adverts,name,address,sells });
+  } catch (e) {
+    return res.status(400).json({ message: e });
+  }
 };
+exports.findUser = async (req, res) => {
+  try {
+    const {userId} = req.params
+    const {
+      email,
+      _id,
+      likedAdverts,
+      type,
+      img,
+      adverts,
+      name,
+      address,
+      sells
+    } = await User.findById(userId).populate({
+      path: "adverts",
+      populate:{
+        path:"contacts",
+        select:"email"
+      }
+    });
+    res.status(200).json({ id: _id, email, likedAdverts, type, img, adverts,name,address,sells });
+  } catch (e) {
+    return res.status(400).json({ message: e });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const { name, address, email, img } = req.body;
+    const userUpdate = await User.findByIdAndUpdate(
+      req.session.userId,
+      { name: name, address: address, email: email, img: img },
+      { new: true }
+    );
+    return res.status(200).json({ name: name, address: address, email: email, img:img });
+  } catch (e) {
+    console.error(e);
+    return res.status(400).json({ message: "wrong request" });
+  }
+};
+
+exports.sell = async (req, res) => {
+  try {
+    const { advertId } = req.params;
+    const advertUpdate = await Advert.findByIdAndUpdate(
+      advertId,
+      {soldOut:true},
+      {new:true}
+    )
+    const userUpdate = await User.findByIdAndUpdate(
+      req.session.userId,
+      {$addToSet:{sells: advertId}},
+      { new: true }
+    );
+    return res.status(200).json(userUpdate);
+  } catch (e) {
+    console.error(e);
+    return res.status(400).json({ message: "wrong request" });
+  }
+};
+
+
 
 //----------------------------------------------------------------------------EDIT USER

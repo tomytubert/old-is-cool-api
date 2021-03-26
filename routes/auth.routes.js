@@ -6,12 +6,18 @@ const {
   signup,
   logout,
   getUser,
+  update,
+  sell,
+  findUser
 } = require("../controllers/auth.controllers");
 
 route
   .post("/signup", signup)
   .post("/login", login)
   .post("/logout", logout)
-  .get("/", withAuth, getUser);
+  .post("/update",update)
+  .post("/:advertId/sell",sell)
+  .get("/", getUser)
+  .get("/:userId",findUser)
 
 module.exports = route;

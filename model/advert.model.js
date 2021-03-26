@@ -10,7 +10,7 @@ const AdvertSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  user: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   brand: {
     type: String,
     required: true,
@@ -27,8 +27,8 @@ const AdvertSchema = new mongoose.Schema({
     type: String,
     enum: ["Manual", "Automatico"],
   },
-  km:{
-    type:Number,
+  km: {
+    type: Number,
   },
   model: {
     type: String,
@@ -43,6 +43,23 @@ const AdvertSchema = new mongoose.Schema({
   otherInformation: {
     type: String,
   },
-});
+  price: {
+    type: Number,
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  fromWhere:{
+    type: String,
+    enum: ["Europa", "Asia","America"],
+  },
+  soldOut:{
+    type:Boolean
+  },
+  contacts:[{
+    type: mongoose.Schema.Types.ObjectId, ref:"User"
+  }]
+},{timestamps: true});
 
 module.exports = mongoose.model("Advert", AdvertSchema);

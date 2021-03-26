@@ -13,6 +13,33 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  address: {
+    type:String
+  },
+  name:{
+    type:String
+  },
+  type:{
+    type:String
+  },
+  img:{
+    type:String
+  },
+  adverts:[{
+    type: mongoose.Schema.Types.ObjectId, ref: "Advert"
+  }],
+  likedAdverts:[{
+    type: mongoose.Schema.Types.ObjectId, ref:"Advert"
+  }],
+  rating:{
+    type:Number
+  },
+  sells:[{
+    type: mongoose.Schema.Types.ObjectId, ref: "Advert"
+  }],
+  purchases:[{
+    type: mongoose.Schema.Types.ObjectId, ref: "Purchases"
+  }]
 });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -129,7 +129,8 @@ exports.findUser = async (req, res) => {
       adverts,
       name,
       address,
-      sells
+      sells,
+      rating
     } = await User.findById(userId).populate({
       path: "adverts",
       populate:{
@@ -137,7 +138,7 @@ exports.findUser = async (req, res) => {
         select:"email"
       }
     });
-    res.status(200).json({ id: _id, email, likedAdverts, type, img, adverts,name,address,sells });
+    res.status(200).json({ id: _id, email, likedAdverts, type, img, adverts,name,address,sells,rating });
   } catch (e) {
     return res.status(400).json({ message: e });
   }
@@ -155,6 +156,31 @@ exports.update = async (req, res) => {
   } catch (e) {
     console.error(e);
     return res.status(400).json({ message: "wrong request" });
+  }
+};
+exports.updateRating = async (req, res) => {
+  try {
+    const {userId} = req.params
+    let rating = Object.keys(req.body);
+    console.log(userId,rating[0]);
+    const user = await User.findById(userId)
+    let averageRating = 0;
+    if(user.rating > 0 ){
+      averageRating = (user.rating + Number(rating[0]))/2
+    } else {
+      averageRating = Number(rating[0])
+    }
+    
+    
+    const userUpdate = await User.findByIdAndUpdate(
+      userId,
+      { rating: averageRating },
+      { new: true }
+    );
+    return res.status(200).json(userUpdate);
+  } catch (e) {
+    console.error(e);
+    return res.status(400).json( rating )
   }
 };
 
@@ -180,4 +206,3 @@ exports.sell = async (req, res) => {
 
 
 
-//----------------------------------------------------------------------------EDIT USER

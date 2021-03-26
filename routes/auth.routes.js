@@ -8,7 +8,8 @@ const {
   getUser,
   update,
   sell,
-  findUser
+  findUser,
+  updateRating
 } = require("../controllers/auth.controllers");
 
 route
@@ -18,6 +19,7 @@ route
   .post("/update",update)
   .post("/:advertId/sell",sell)
   .get("/", getUser)
+  .post("/rating/:userId",updateRating)
   .get("/:userId",findUser)
 
 module.exports = route;

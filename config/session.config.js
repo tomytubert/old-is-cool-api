@@ -20,10 +20,11 @@
 // };
 require("dotenv").config();
 const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const MongoStore = require("connect-mongo").default;
 const { SESSION_SECRET, MONGODB_URI, NODE_ENV } = process.env;
 const isProduction = NODE_ENV === "production";
 const sameSite = isProduction ? "none" : "lax";
+
 module.exports = (app) => {
   app.set("trust proxy", 1);
   app.use(

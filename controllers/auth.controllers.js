@@ -93,7 +93,6 @@ exports.logout = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    // const {userId} = req.params
     const { userId } = req.session;
     const {
       email,
@@ -114,7 +113,7 @@ exports.getUser = async (req, res) => {
     })
     res.status(200).json({ id: _id, email, likedAdverts, type, img, adverts,name,address,sells });
   } catch (e) {
-    return res.status(400).json({ message: e });
+    return res.status(400).json({ message: userId });
   }
 };
 exports.findUser = async (req, res) => {

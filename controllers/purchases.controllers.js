@@ -23,9 +23,11 @@ exports.createPurchases = async (req, res) => {
 exports.updatePurchases = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log(userId, "Id Purchases");
     const {opinion,rating} = req.body;
-    const purchases = await Purchases.findOneAndUpdate(
-        {buyer:userId},
+    const purchases = await Purchases.findByIdAndUpdate(
+        // {buyer:userId},
+        userId,
         {opinion:opinion,rating:rating},
         {new:true}
         )
@@ -45,6 +47,7 @@ exports.getPurchases = async (req, res) => {
     return res.status(400).json({ message: "wrong request" });
   }
 };
+
 exports.getPurchasesSeller = async (req, res) => {
   try {
     const { userId } = req.params;

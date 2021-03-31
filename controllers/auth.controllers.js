@@ -10,20 +10,20 @@ const {
 exports.signup = async (req, res) => {
   try {
     const { password, email, type, img } = req.body;
-    console.log("req.body", type);
+
     const hasMissingCredentials = !password || !email;
     if (hasMissingCredentials) {
-      return res.status(400).json({ message: "missing credentials" });
+      return res.status(400).json({ message: "Faltan campos" });
     }
 
     if (!hasCorrectPasswordFormat(password)) {
-      return res.status(400).json({ message: "incorrect password format" });
+      return res.status(400).json({ message: "Formato incorrecto de la contraseña" });
     }
 
     const user = await User.findOne({ email });
 
     if (user) {
-      return res.status(400).json({ message: "user alredy exists" });
+      return res.status(400).json({ message: "El usuario ya existe" });
     }
 
     const saltRounds = 10;
@@ -43,10 +43,10 @@ exports.signup = async (req, res) => {
       .json({ user: newUser.email, id: newUser._id, type: type });
   } catch (e) {
     if (isMongooseErrorValidation(e)) {
-      return res.status(400).json({ message: "incorrect email format" });
+      return res.status(400).json({ message: "Formato email incorrecto" });
     }
     if (isMongoError(e)) {
-      return res.status(400).json({ message: "duplicate field" });
+      return res.status(400).json({ message: "Campo duplicado" });
     }
     return res.status(400).json({ message: "wrong request" });
   }
@@ -70,17 +70,17 @@ exports.login = async (req, res) => {
       user.hashedPassword
     );
     if (!hasCorrectPassword) {
-      return res.status(401).json({ message: "unauthorize" });
+      return res.status(401).json({ message: "No Autorizado" });
     }
     if (!hasCorrectPasswordFormat(password)) {
-      return res.status(400).json({ message: "incorrect password format" });
+      return res.status(400).json({ message: "Formato incorrecto de la contraseña" });
     }
     req.session.userId = user._id;
 
     return res.status(200).json({ user: user.email, id: user._id });
   } catch (e) {
     if (isMongooseErrorValidation(e)) {
-      return res.status(400).json({ message: "incorrect email format" });
+      return res.status(400).json({ message: "Formato incorrecto del email" });
     }
     return res.status(400).json({ message: "wrong request" });
   }
@@ -116,6 +116,7 @@ exports.getUser = async (req, res) => {
     return res.status(400).json({ message: userId });
   }
 };
+
 exports.findUser = async (req, res) => {
   try {
     const {userId} = req.params
@@ -161,7 +162,6 @@ exports.updateRating = async (req, res) => {
   try {
     const {userId} = req.params
     let rating = Object.keys(req.body);
-    console.log(userId,rating[0]);
     const user = await User.findById(userId)
     let averageRating = 0;
     if(user.rating > 0 ){

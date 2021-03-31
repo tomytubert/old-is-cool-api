@@ -24,9 +24,8 @@ exports.createAdvert = async (req, res) => {
     const isMissingCredentials =
       !typeOfCar || !image || !brand || !year || !model;
     if (isMissingCredentials) {
-      return res.status(400).json({ message: "missing credentials" });
+      return res.status(400).json({ message: "Faltan campos por rellenar" });
     }
-    // const userSessionId = req.session.userId; No funciona
 
     const newAdvert = await Advert.create({
       typeOfCar,
